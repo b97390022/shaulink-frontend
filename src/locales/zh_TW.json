@@ -18,5 +18,11 @@
     "Heading to the destination...": "正在前往目的地...",
     "Language": "語言",
     "English": "英文",
-    "Traditional Chinese": "繁體中文"
+    "Traditional Chinese": "繁體中文",
+    "Please enter password!": "請輸入密碼！",
+    "Password error! please try again.": "密碼錯誤！請重新再試一次．",
+    "Drag & Drop your files or": "拖放檔案或",
+    "Browse": "瀏覽",
+    "Password": "密碼",
+    "Images required!": "請至少上傳一張圖片！"
 }

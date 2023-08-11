@@ -1,17 +1,17 @@
 import Container from 'react-bootstrap/Container';
-import { useContext } from 'react';
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ThemeContext } from "./Theme.js";
+import { ThemeContext } from "./Theme";
 
 const NotFoundPage = () => {
-    const { theme } = useContext(ThemeContext);
+    const { theme } = React.useContext(ThemeContext);
     const { t } = useTranslation();
 
     return (
         <Container id='notFoundContainer' className="d-flex flex-column justify-content-center align-items-center p-3 min-vh-100 position-relative">
             <h1><b>404</b></h1>
-            <h1> <span class="ascii">(╯°□°）╯︵ ┻━┻</span></h1>
+            <h1> <span className="ascii">(╯°□°）╯︵ ┻━┻</span></h1>
             <nav id="backHomeLink">
                 <NavLink
                     to="/"
