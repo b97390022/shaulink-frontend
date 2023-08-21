@@ -1,5 +1,6 @@
 import React from 'react';
 import CustomButton from "./customButton";
+import CompleteFooter from "./CompleteFooter";
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import * as formik from 'formik';
@@ -8,14 +9,17 @@ import copy from "copy-to-clipboard";
 import Swal from 'sweetalert2';
 import { QRCodeCanvas } from "qrcode.react";
 import { useTranslation } from "react-i18next";
+import { ConfigContext } from '../config';
 import { ThemeContext } from "../Theme";
-import { Button } from 'react-bootstrap';
+import { downloadQRCode } from '../utils/functions';
 
 const URLFormComponent = () => {
+    const { config } = React.useContext(ConfigContext);
     const { theme } = React.useContext(ThemeContext);
     const { t } = useTranslation();
     const [ qrValue, setQrValue ] = React.useState('');
     const { Formik } = formik;
+    const qrRef = React.useRef(null);
     const inputUrlRef = React.useRef(null);
     const [ main, setMain ] = React.useState(true);
     const [ isloading, setIsLoading] = React.useState(false);
@@ -49,39 +53,27 @@ const URLFormComponent = () => {
         }, 800));
     };
 
-    const downloadQRCode = () => {
-        const canvas = document.getElementById("qr-code");
-        const pngUrl = canvas
-          .toDataURL("image/png")
-          .replace("image/png", "image/octet-stream");
-        let downloadLink = document.createElement("a");
-        downloadLink.href = pngUrl;
-        downloadLink.download = `${qrValue.split('/').pop()}.png`;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    };
-
-    const submitUrlHandler = (values) => {
+    const submitUrlHandler = async (values) => {
         if (main === true) {
             setIsLoading(true);
             const longUrl = values["longUrl"];
             
             const fetchData = async (url) => {
                 try {
+                    
                     const response = await axios.post(
-                        process.env.NODE_ENV === "production" ? `/api/v1/shorten/` : `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/v1/shorten/`,
+                        `${config.backendUrl}/shorten`,
                         {
                             "url": url
                         }
                     );
                     
-                    if (response.status === 200) {
-                        setShortUrl(response.data);
-                        setQrValue(response.data);
+                    if (response.status === 200 && response.data) {
+                        const respVal = response.data.data;
+                        setShortUrl(respVal.shortUrl);
+                        setQrValue(respVal.shortUrl);
                         setMain(false);
                     };
-                    setMain(false);
 
                 } catch (error) {
                     if (error.response?.status === 404 || error.response?.status === 500) {
@@ -98,11 +90,10 @@ const URLFormComponent = () => {
                     setIsLoading(false);
                 }
             };
-            fetchData(longUrl);
-            
+            await fetchData(longUrl);
         }
     }
-
+    
     return (
         <>
             {
@@ -129,8 +120,13 @@ const URLFormComponent = () => {
                                 main === false
                                 ? (
                                     <>
-                                        <div className='mb-3'>
-                                            <QRCodeCanvas id="qr-code" level={"L"} value={qrValue} onClick={downloadQRCode}/>
+                                        <div ref={qrRef} className='mb-3'>
+                                            <QRCodeCanvas id="qr-code" level={"L"} value={qrValue} onClick={()=>{
+                                                downloadQRCode(
+                                                    qrRef.current.querySelector('canvas'),
+                                                    qrValue
+                                                )
+                                            }}/>
                                         </div>
                                         <Form.Group className="mb-3 w-100" controlId="urlInput"
                                             style={{'minWidth':'350px'}}
@@ -140,13 +136,13 @@ const URLFormComponent = () => {
                                                 ref={inputUrlRef}
                                                 name="shortUrl"
                                                 onChange={handleChange}
-                                                value={shortUrl !== "" ? (process.env.NODE_ENV === "production" ? shortUrl : shortUrl.replace('http://localhost', `http://localhost:${process.env.REACT_APP_FRONTEND_PORT}`)) : values.longUrl}
+                                                value={shortUrl !== "" ? (process.env.NODE_ENV === "production" ? shortUrl : shortUrl.replace('http://localhost', config.frontendUrl)) : values.longUrl}
                                                 className={`rounded-pill border border-3 border-${theme === "dark" ? "light" : "dark"} fs-4`}
                                             />
                                         </Form.Group>
                                     </>
                                 )
-                                : (<></>)
+                                : null
                             }
                             
                             { 
@@ -172,17 +168,17 @@ const URLFormComponent = () => {
                                         <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                             <Form.Check type="checkbox" label="打勾勾" />
                                         </Form.Group>
-                                        <CustomButton type="submit" text={t("Shorten")}/>
+                                        <CustomButton disabled={isSubmitting} type="submit" text={t("Shorten")}/>
                                     </>
                                 )
                                 : (
                                     <>
-                                        <Form.Group className="d-flex justify-content-center align-items-center pt-3 pb-3 w-100"
-                                            style={{'minWidth':'350px'}}
-                                        >
-                                            <CustomButton type="button" text={t("New URL")} onClick={resetForm} />
-                                            <CustomButton type="button" text={t(copyBtnText)} className="bg-white" onClick={copyToClipboard} />
-                                        </Form.Group>
+                                        <CompleteFooter 
+                                            newText={"New URL!"}
+                                            resetFormCallback={resetForm}
+                                            copyStatus={copyBtnText}
+                                            copyFunc={copyToClipboard}
+                                        />
                                     </>
                                 )
                             }

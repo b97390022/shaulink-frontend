@@ -5,7 +5,9 @@
     "Shorten Image": "縮圖片",
     "Shorten Video": "縮影片",
     "Privacy Policy": "隱私權政策",
-    "New URL": "新網址！",
+    "New URL!": "新網址！",
+    "New Image!": "新圖片！",
+    "New Video!": "新影片！",
     "Copy": "複製",
     "Copied!": "已複製！",
     "Please enter URL!": "請填入ＵＲＬ！",
@@ -24,5 +26,5 @@
     "Drag & Drop your files or": "拖放檔案或",
     "Browse": "瀏覽",
     "Password": "密碼",
-    "Images required!": "請至少上傳一張圖片！"
+    "Please upload at least one image!": "請至少上傳一張圖片！"
 }

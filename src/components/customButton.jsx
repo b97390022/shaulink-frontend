@@ -6,7 +6,8 @@ const CustomButton = (props) => {
         type,
         text,
         className,
-        onClick
+        onClick,
+        disabled
     } = props;
 
     return (
@@ -21,7 +22,7 @@ const CustomButton = (props) => {
                 `}
             </style>
 
-            <Button onClick={onClick || (()=>{})} type={type} className={`border border-dark border-2 rounded-pill fw-bold ${className ? className : ""}`} variant="info" size="normal">
+            <Button disabled={disabled} onClick={onClick || (()=>{})} type={type} className={`border border-dark border-2 rounded-pill fw-bold ${className ? className : ""}`} variant="info" size="normal">
                 {text}
             </Button>
         </>

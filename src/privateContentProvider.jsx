@@ -4,17 +4,17 @@ import PrivateContentForm from "./components/privateContentForm.jsx";
 
 const PrivateContent = ({ children, hash, password  }) => {
     
-    const getCorrectStatus = (hash) => {
-        const value = getCookie(hash);
-        if (value !== undefined) {
-            return true;
-        }
-        return false;
-    }
-    
-    const [isCorrect, setIsCorrect] = React.useState(getCorrectStatus(hash));
+    const [isCorrect, setIsCorrect] = React.useState(false);
 
-    return (isCorrect ? children : <PrivateContentForm hash={hash} password={password} setIsCorrect={setIsCorrect} />)
+    return (
+        isCorrect
+        ? children
+        : <PrivateContentForm
+            hash={hash}
+            password={password}
+            setIsCorrect={setIsCorrect}
+        />
+    )
 }
 
 export { PrivateContent };

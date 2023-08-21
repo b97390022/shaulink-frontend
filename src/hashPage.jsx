@@ -23,9 +23,13 @@ const HashPage = () => {
                     process.env.NODE_ENV === "production" ? `/api/v1/${hash}` : `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/v1/${hash}`
                 );
                 if (response.status === 200) {
-                    const { type: type_, content, password } = response.data;
-                    setRedirectType(type_);
-                    setRedirectContent(content)
+                    const { 
+                        type,
+                        data,
+                        password 
+                    } = response.data;
+                    setRedirectType(type);
+                    setRedirectContent(data)
                     setredirectStatus(true);
                     setRedirectPassword(password);
                 }
@@ -44,36 +48,43 @@ const HashPage = () => {
     React.useEffect(() => {
         // 更新 Open Graph 資訊
         document.querySelector('meta[property="og:title"]').setAttribute('content', "title");
-        document.querySelector('meta[property="og:image"]').setAttribute('content', "iamge");
+        document.querySelector('meta[property="og:image"]').setAttribute('content', "image");
         document.querySelector('meta[property="og:description"]').setAttribute('content', "description");
         document.querySelector('meta[property="og:url"]').setAttribute('content', "url");
       }, []);
 
-    if (redirectType === '1') {
-        window.location.replace(redirectContent);
+    if (redirectType === 1) {
+        window.location.replace(redirectContent[0]["object_name"]);
         
-    } else if (redirectType === '2') {
+    } else if (redirectType === 2) {
         return (
             <>
+                <header>
+                    < NavbarComponent />
+                </header>
                 <Container
-                    className="d-flex flex-column justify-content-center align-items-center p-5 mb-4"
-                    style={{'height': 'calc(100vh - 56px)', 'marginTop': '56px'}}
+                    className="d-flex flex-column align-items-center p-5 mb-4"
+                    style={{'minHeight': 'calc(100vh - 56px)'}}
                 >
-                    <NavbarComponent />
-                    <PrivateContent hash={hash} password={redirectPassword} >
-                        <ImageComponent />
+                    <PrivateContent
+                        hash={hash}
+                        password={redirectPassword}
+                    >
+                        <ImageComponent content={redirectContent}/>
                     </PrivateContent>
                 </Container>
             </>
         );
-    } else if (redirectType === '3') {
+    } else if (redirectType === 3) {
         return (
             <>
                 <Container
-                    className="d-flex flex-column justify-content-center align-items-center p-5 mb-4"
-                    style={{'height': 'calc(100vh - 56px)', 'marginTop': '56px'}}
+                    className="d-flex flex-column align-items-center p-5 mb-4"
+                    style={{'minHeight': 'calc(100vh - 56px)'}}
                 >
-                    <NavbarComponent />
+                    <header>
+                        < NavbarComponent />
+                    </header>
                     <PrivateContent hash={hash} password={redirectPassword} >
                         <VideoComponent />
                     </PrivateContent>
@@ -87,7 +98,9 @@ const HashPage = () => {
             {
                 redirectStatus ? <RedirectPage/> :
                 <>
-                    <NavbarComponent />
+                    <header>
+                        < NavbarComponent />
+                    </header>
                     <NotFoundPage />
                 </>
             }

@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from "./Theme";
+import { ConfigProvider } from './config';
 import ReactGA from "react-ga4";
 
 ReactGA.initialize("G-55WTT5S1HN");
@@ -12,9 +13,11 @@ ReactGA.initialize("G-55WTT5S1HN");
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+    <ConfigProvider>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </ConfigProvider>
   </React.StrictMode>
 );
 

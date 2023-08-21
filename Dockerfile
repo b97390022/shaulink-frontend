@@ -7,8 +7,11 @@ COPY package-lock.json /home/node/app/
 
 RUN npm ci
 
+COPY config /home/node/app/config
 COPY public /home/node/app/public
+COPY scripts /home/node/app/scripts
 COPY src /home/node/app/src
+COPY .env.production /home/node/app/
 
 RUN npm run build
 

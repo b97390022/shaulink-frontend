@@ -9,8 +9,8 @@ const NavbarComponent = () => {
     const { t } = useTranslation();
 
     return (
-        <Navbar expand="lg" className="ps-4 pe-4 min-vw-100 position-fixed top-0 start-0 justify-content-start"> 
-            <Navbar.Toggle aria-controls="navbar-nav" className="me-2" />
+        <Navbar expand="lg" className="ps-4 pe-4 sticky-top justify-content-start"> 
+            <Navbar.Toggle aria-controls="navbar-nav" className="me-3" />
             <Navbar.Brand href="/">Shaulink</Navbar.Brand>
             <Navbar.Collapse className="justify-content-between" id="navbar-nav">
                 <Nav>

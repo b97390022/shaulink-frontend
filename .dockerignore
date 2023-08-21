@@ -1,0 +1,9 @@
+*
+!config
+!public
+!scripts
+!src
+!nginx.conf
+!package-lock.json
+!package.json
+!.env.production
